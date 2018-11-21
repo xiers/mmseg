@@ -65,7 +65,7 @@ int SynonymsDict::load(const char* filename)
 		}
 	}else
 		return -3; //bad format
-    
+
 	return 0;
 }
 
@@ -85,14 +85,14 @@ int SynonymsDict::import(const char* filename)
 	//std::map<std::string, size_t> rKeys;
 	//std::map<std::string, size_t> lKeys;
 	is = new std::ifstream(filename);
-	
-	if (! *is) 
+
+	if (! *is)
 		return -1;
 	std::string line;
 	std::string lKey,rKey;
 	size_t offset = 1;
-	char txtHead[3] = {239,187,191};
-	//load 
+    unsigned char txtHead[3] = {239,187,191};
+	//load
 	while (std::getline(*is, line)) {
 		//for each line.
 		if(line.size()<4)
@@ -120,7 +120,7 @@ int SynonymsDict::import(const char* filename)
 			offset += rKey.size() + 1; //0 term
 		}else{
 			lKey_offset = it->second;
-			
+
 		}
 		//check lKey
 		it = lKeys.find(lKey);
@@ -170,7 +170,7 @@ int SynonymsDict::save(const char* filename)
 	std::sort(keys.begin(), keys.end(), Cmp);
 	m_da.clear();
 	int nRet = m_da.build(keys.size(), &keys[0], 0, 0 ) ;
-	//build _csr_3dynarray_trie 	
+	//build _csr_3dynarray_trie
 	size_t size_ = m_da.size();//the count of unit_t
 	array_ = new _csr_sybarray_trie[m_da.size()];
 	memcpy(&head,head_mgc,sizeof(head_mgc));
@@ -205,7 +205,7 @@ int SynonymsDict::save(const char* filename)
 		char* buf = new char[head.pool_size];
 		memset(buf,0,head.pool_size);
 		char null_char = 0;
-		
+
 		for( std::map<std::string,size_t>::iterator it = rKeys.begin();
 			it != rKeys.end(); it++) {
 				const std::string & str = it->first;
@@ -258,7 +258,7 @@ const char* SynonymsDict::maxMatch(const char* key, int &len)
 		return NULL;
 
 	if (!len) len = strlen(key);
-	
+
 	Result result;
 	set_result(result, -1, 0);
 
